@@ -55,11 +55,14 @@ const transformInternalLinks = data => {
     '//estatista.podentender.com'
   )
 
-  $('link[href*="//podentender.com"]')
+  $('link[href*="//podentender.com"][href*=".css"]')
     .each((i, link) => $(link).attr('href', replaceBaseUrl($(link).attr('href'))))
 
   $('script[src*="//podentender.com"]')
     .each((i, script) => $(script).attr('src', replaceBaseUrl($(script).attr('src'))))
+
+  $('a[href*="//podentender.com"]')
+    .each((i, a) => $(a).attr('href', replaceBaseUrl($(a).attr('href'))))
 
   return $.html();
 }
