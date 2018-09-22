@@ -1,13 +1,16 @@
+install:
+  - npm install
+
 script:
-  - estatizar.sh
-  - rm estatizar.sh
+  - npm run build
+  - npm run clean
 
 deploy:
   provider: pages
-  skip-cleanup: false
+  skip-cleanup: true
   github-token: $GITHUB_TOKEN
   keep-history: true
   verbose: true
+  target-branch: gh-pages
   on:
     branch: master
-
