@@ -1,10 +1,10 @@
 {
   "name": "estatista",
   "version": "1.0.0",
-  "description": "",
-  "main": "estatizar.js",
+  "description": "Gerador de páginas estáticas do PODEntender",
+  "main": "src/main.js",
   "scripts": {
-    "build": "node estatizar.js",
+    "build": "node src/main.js",
     "clean": "rm -rf node_modules/ .travis.yml package*",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/PODEntender/estatista#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "cheerio": "^1.0.0-rc.2"
+    "cheerio": "^1.0.0-rc.2",
+    "dotenv": "^6.0.0"
   }
 }
