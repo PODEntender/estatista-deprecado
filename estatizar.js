@@ -50,34 +50,33 @@ const fetchUrlsToDownload = () => {
 async function fetchAndSaveOnlinePages(files) {
   const file = files.pop()
   console.log(`Fetching page ${file}...`)
-  const res = await axios.get(file, {
-    transformResponse: data => data.replace(/https?:\/\/podentender\.com/g, 'https://estatista.podentender.com'),
-  })
 
-  const { dir, base } = parse(file);
-  const path = join('./', dir.replace(NEW_URL, ''), base || 'index.html')
+  try {
+      const res = await axios.get(file, {
+        transformResponse: data => data.replace(/https?:\/\/podentender\.com/g, 'https://estatista.podentender.com'),
+      })
 
-  if (res.status === 200) {
-    console.log(`Writing page ${file}...`)
+      const { dir, base } = parse(file);
+      const path = join('./', dir.replace(NEW_URL, ''), base || 'index.html')
 
-    execSync(`mkdir -p ${dirname(path)}`)
-    fs.writeFileSync(path, res.data)
-  } else {
-    console.log(`Retrying page ${file} in 3 seconds...`)
+      console.log(`Writing page ${file}...`)
+
+      execSync(`mkdir -p ${dirname(path)}`)
+      fs.writeFileSync(path, res.data)
+
+      if (files.length) {
+        console.log(`Fetching next file in 1 second...`)
+
+        await sleep(1000);
+        return fetchAndSaveOnlinePages(files)
+      }
+  } catch (e) {
+    console.log(`Retrying page ${file} in 1 second...`)
 
     files.push(file)
-    await sleep(3000)
+    await sleep(1000)
     return fetchAndSaveOnlinePages(files)
   }
-
-  if (files.length) {
-    console.log(`Fetching next file in 2 seconds...`)
-
-    await sleep(2000)
-    return fetchAndSaveOnlinePages(files)
-  }
-
-  return res
 }
 
 fetchUrlsToDownload()
