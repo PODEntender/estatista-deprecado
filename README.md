@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/PODEntender/estatista.svg?branch=master)](https://travis-ci.org/PODEntender/estatista)
+
 # O Estatista
 ------------
 
