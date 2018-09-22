@@ -28,7 +28,10 @@ module.exports = async function fetchAndSaveOnlinePages(files) {
 
       console.log(`Writing page ${file}...`)
 
-      execSync(`mkdir -p ${dirname(path)}`)
+      if (!fs.existsSync(dirname(path))) {
+        execSync(`mkdir -p ${dirname(path)}`)
+      }
+
       fs.writeFileSync(path, res.data)
 
       if (files.length) {
