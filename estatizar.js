@@ -6,6 +6,8 @@ const { execSync } = require('child_process')
 
 const BASE_URL = 'https://podentender.com'
 const NEW_URL = 'https://podentender.com';
+const INTERVAL_TO_NEXT_PAGE = 500;
+const INTERVAL_TO_RETRY = 500;
 
 const axios = require('axios').create({
   baseURL: BASE_URL,
@@ -20,6 +22,15 @@ const axios = require('axios').create({
 
 const SITEMAP_FILES = [
   'post-sitemap.xml',
+  'page-sitemap.xml',
+  'galleries-sitemap.xml',
+  'portfolios-sitemap.xml',
+  'testimonials-sitemap.xml',
+  'team-sitemap.xml',
+  'category-sitemap.xml',
+  'post_tag-sitemap.xml',
+  'portfoliosets-sitemap.xml',
+  'author-sitemap.xml',
 ]
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -85,16 +96,16 @@ async function fetchAndSaveOnlinePages(files) {
       fs.writeFileSync(path, res.data)
 
       if (files.length) {
-        console.log(`Fetching next file in 1 second...`)
+        console.log(`Fetching next file in ${INTERVAL_TO_NEXT_PAGE} ms...`)
 
-        await sleep(1000);
+        await sleep(INTERVAL_TO_NEXT_PAGE);
         return fetchAndSaveOnlinePages(files)
       }
   } catch (e) {
-    console.log(`Retrying page ${file} in 1 second...`)
+    console.log(`Retrying page ${file} in ${INTERVAL_TO_RETRY} ms...`)
 
     files.push(file)
-    await sleep(1000)
+    await sleep(INTERVAL_TO_RETRY)
     return fetchAndSaveOnlinePages(files)
   }
 }
