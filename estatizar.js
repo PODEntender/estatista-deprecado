@@ -47,13 +47,30 @@ const fetchUrlsToDownload = () => {
   })
 }
 
+const transformInternalLinks = data => {
+  const $ = cheerio.load(data)
+
+  const replaceBaseUrl = url => url.replace(
+    /\/\/podentender\.com/g,
+    '//estatista.podentender.com'
+  )
+
+  $('link[href*="//podentender.com"]')
+    .each((i, link) => $(link).attr('href', replaceBaseUrl($(link).attr('href'))))
+
+  $('script[src*="//podentender.com"]')
+    .each((i, script) => $(script).attr('src', replaceBaseUrl($(script).attr('src'))))
+
+  return $.html();
+}
+
 async function fetchAndSaveOnlinePages(files) {
   const file = files.pop()
   console.log(`Fetching page ${file}...`)
 
   try {
       const res = await axios.get(file, {
-        transformResponse: data => data.replace(/https?:\/\/podentender\.com/g, 'https://estatista.podentender.com'),
+        transformResponse: transformInternalLinks,
       })
 
       const { dir, base } = parse(file);
