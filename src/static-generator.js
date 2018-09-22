@@ -14,7 +14,16 @@ const {
   INTERVAL_TO_RETRY,
 } = process.env
 
+const generateDestinationFile = url => {
+  const { dir, base } = parse(url);
+
+  return join('./', dir.replace(NORMALIZED_URL, ''), base || 'index.html')
+}
+
+const generateDestinationDir = file => dirname(file)
+
 module.exports = async function fetchAndSaveOnlinePages(files) {
+  // const files = _files.filter(file => file.match(/news-podcast/))
   const file = files.pop()
   console.log(`Fetching page ${file}...`)
 
@@ -23,16 +32,20 @@ module.exports = async function fetchAndSaveOnlinePages(files) {
         transformResponse: transformer.transformInternalLinks,
       })
 
-      const { dir, base } = parse(file);
-      const path = join('./', dir.replace(NORMALIZED_URL, ''), base || 'index.html')
+      const path = generateDestinationFile(file)
+      const dir = generateDestinationDir(path)
 
       console.log(`Writing page ${file}...`)
 
-      if (!fs.existsSync(dirname(path))) {
-        execSync(`mkdir -p ${dirname(path)}`)
-      }
+      try {
+        if (!fs.existsSync(dir)) {
+          execSync(`mkdir -p ${dir}`)
+        }
 
-      fs.writeFileSync(path, res.data)
+        fs.writeFileSync(path, res.data)
+      } catch (e) {
+        console.log(`Failed to save file ${path}. Skipping...`)
+      }
 
       if (files.length) {
         console.log(`Fetching next file in ${INTERVAL_TO_NEXT_PAGE} ms...`)
