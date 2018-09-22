@@ -50,7 +50,9 @@ const fetchUrlsToDownload = () => {
 async function fetchAndSaveOnlinePages(files) {
   const file = files.pop()
   console.log(`Fetching page ${file}...`)
-  const res = await axios.get(file)
+  const res = await axios.get(file, {
+    transformResponse: data => data.replace(/https?:\/\/podentender\.com/g, 'https://estatista.podentender.com'),
+  })
 
   const { dir, base } = parse(file);
   const path = join('./', dir.replace(NEW_URL, ''), base || 'index.html')
