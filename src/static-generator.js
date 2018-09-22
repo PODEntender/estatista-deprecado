@@ -15,9 +15,10 @@ const {
 } = process.env
 
 const generateDestinationFile = url => {
-  const { dir, base } = parse(url);
+  const { dir, base, ext } = parse(url);
+  const fileName = ext ? base : `${base || 'index'}.html`
 
-  return join('./', dir.replace(NORMALIZED_URL, ''), base || 'index.html')
+  return join('./', dir.replace(NORMALIZED_URL, ''), fileName)
 }
 
 const generateDestinationDir = file => dirname(file)
