@@ -13,6 +13,7 @@ const {
   NORMALIZED_URL,
   INTERVAL_TO_NEXT_PAGE,
   INTERVAL_TO_RETRY,
+  OVERWRITE_FILES,
 } = process.env
 
 const isHtml = url => parse(url).ext === '.html'
@@ -58,7 +59,7 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
     const file = generateDestinationFile(url)
     const dir = generateDestinationDir(file)
 
-    if (false === fs.existsSync(file)) {
+    if (true === JSON.parse(process.env.OVERWRITE_FILES) || false === fs.existsSync(file)) {
       console.log(`Writing page ${url}...`)
 
       try {
