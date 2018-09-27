@@ -12,8 +12,8 @@ const transformInternalLinks = document => {
   $('link[href*="//podentender.com"][href*=".css"]')
     .each((i, link) => $(link).attr('href', replaceBaseUrl($(link).attr('href'))))
 
-  $('script[src*="//podentender.com"]')
-    .each((i, script) => $(script).attr('src', replaceBaseUrl($(script).attr('src'))))
+  $('img[src],script[src*="//podentender.com"]')
+    .each((i, elm) => $(elm).attr('src', replaceBaseUrl($(elm).attr('src'))))
 
   $('a[href*="//podentender.com"]')
     .each((i, a) => $(a).attr('href', replaceBaseUrl($(a).attr('href'))))
