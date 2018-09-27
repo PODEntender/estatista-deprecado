@@ -9,7 +9,7 @@ const replaceBaseUrl = url => url.replace(
 const transformInternalLinks = document => {
   const $ = document
 
-  $('link[href*="//podentender.com"][href*=".css"]')
+  $('link[href*="//podentender.com"][href*=".css"],link[rel*="icon"]')
     .each((i, link) => $(link).attr('href', replaceBaseUrl($(link).attr('href'))))
 
   $('img[src],script[src*="//podentender.com"]')
@@ -17,6 +17,9 @@ const transformInternalLinks = document => {
 
   $('a[href*="//podentender.com"]')
     .each((i, a) => $(a).attr('href', replaceBaseUrl($(a).attr('href'))))
+
+  $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
+    .each((i, meta) => $(meta).attr('content', replaceBaseUrl($(meta).attr('content'))))
 
   return $.html();
 }

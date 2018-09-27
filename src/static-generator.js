@@ -3,11 +3,11 @@
 const fs = require('fs')
 const { dirname, join, parse } = require('path')
 const { execSync } = require('child_process')
+const cheerio = require('cheerio')
 
 const sleep = require('./utils/sleep')
 const http = require('./utils/http')
 const transformer = require('./transformer')
-const cheerio = require('cheerio')
 
 const {
   NORMALIZED_URL,
@@ -37,9 +37,15 @@ const extractAssetUrls = html => {
   const urls = []
   const $ = cheerio.load(html)
 
-  $('img[src],script[src*="//podentender.com"]').toArray().forEach(elm => urls.push(elm.attribs.src))
-
-  $('link[href*="//podentender.com"][href*=".css"]').toArray().forEach(elm => urls.push(elm.attribs.href))
+  $('img[src],script[src*="//podentender.com"]')
+    .toArray()
+    .forEach(elm => urls.push(elm.attribs.src))
+  $('link[href*="//podentender.com"][href*=".css"],link[rel*="icon"]')
+    .toArray()
+    .forEach(elm => urls.push(elm.attribs.href))
+  $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
+    .toArray()
+    .forEach(elm => urls.push(elm.attribs.content))
 
   return urls
 }
