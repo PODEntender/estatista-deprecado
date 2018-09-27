@@ -1,12 +1,9 @@
 'use strict'
 
-const {
-  BASE_URL,
-  NORMALIZED_URL,
-} = process.env
-
 const cheerio = require('cheerio')
 const http = require('./utils/http')
+const fs = require('fs')
+const { parse } = require('path')
 
 const SITEMAP_FILES = [
   'post-sitemap.xml',
@@ -32,15 +29,16 @@ const readUrlsFromSitemaps = () => {
     console.log('Fetching sitemaps...')
 
     Promise.all(
-      SITEMAP_FILES.map(file => http.get(file))
+      SITEMAP_FILES.filter(file => !fs.existsSync(file)).map(file => http.get(file))
     )
     .then(responses => {
-      const files = responses.reduce((files, response) => {
-        return files.concat(fetchFilesFromSitemap(response.data))
-      }, defaultUrls)
+      responses.forEach(response => fs.writeFileSync(parse(response.request.path).base, response.data))
 
-      resolve(files)
+      return SITEMAP_FILES.map(file => parse(file).base).map(file => fs.readFileSync(file))
     })
+    .then(contents => resolve(
+      contents.reduce((files, content) => files.concat(fetchFilesFromSitemap(content)), defaultUrls)
+    ))
   })
 }
 
