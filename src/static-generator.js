@@ -52,37 +52,39 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
     const file = generateDestinationFile(url)
     const dir = generateDestinationDir(file)
 
-    console.log(`Writing page ${url}...`)
+    if (false === fs.existsSync(file)) {
+      console.log(`Writing page ${url}...`)
 
-    try {
-      if (false === fs.existsSync(dir)) {
-        execSync(`mkdir -p ${dir}`)
-      }
+      try {
+        if (false === fs.existsSync(dir)) {
+          execSync(`mkdir -p ${dir}`)
+        }
 
-      const stream = fs.createWriteStream(file)
-      await fetchUrl(url)
-        .then(res => res.data.pipe(stream))
-        .then(
-          stream => new Promise(
-            resolve => stream.on(
-              'close',
-              () => {
-                resolve(fs.readFileSync(file))
-              }
+        const stream = fs.createWriteStream(file)
+        await fetchUrl(url)
+          .then(res => res.data.pipe(stream))
+          .then(
+            stream => new Promise(
+              resolve => stream.on(
+                'close',
+                () => {
+                  resolve(fs.readFileSync(file))
+                }
+              )
             )
           )
-        )
-        .then(content => {
-          if (true === isHtml(file)) {
-            extractAssetUrls(content.toString()).forEach(url => urls.push(url))
+          .then(content => {
+            if (true === isHtml(file)) {
+              extractAssetUrls(content.toString()).forEach(url => urls.push(url))
 
-            return fs.writeFileSync(file, sanitizeContent(content))
-          }
+              return fs.writeFileSync(file, sanitizeContent(content))
+            }
 
-          return fs.writeFileSync(file, content)
-        })
-    } catch (e) {
-      console.log(`Failed to save file ${file}. Skipping...`)
+            return fs.writeFileSync(file, content)
+          })
+      } catch (e) {
+        console.log(`Failed to save file ${file}. Skipping...`)
+      }
     }
 
     if (0 < urls.length) {
