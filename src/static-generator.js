@@ -51,7 +51,7 @@ const extractAssetUrls = html => {
 }
 
 module.exports = async function fetchAndSaveOnlinePages(urls) {
-  const url = urls.pop()
+  const url = urls.pop().replace('http://', 'https://')
   console.log(`Fetching page ${url}...`)
 
   try {
