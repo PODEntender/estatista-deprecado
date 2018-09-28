@@ -92,6 +92,8 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
       } catch (e) {
         console.log(`Failed to save file ${file}. Skipping...`)
       }
+    } else {
+      return fetchAndSaveOnlinePages(urls)
     }
 
     if (0 < urls.length) {
