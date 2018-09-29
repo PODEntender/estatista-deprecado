@@ -21,7 +21,10 @@ const transformInternalLinks = document => {
   $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
     .each((i, meta) => $(meta).attr('content', replaceBaseUrl($(meta).attr('content'))))
 
-  return $.html();
+  $('[style*=url]')
+    .each((i, elm) => $(elm).attr('style', replaceBaseUrl($(elm).attr('style'))))
+
+  return $.html({decodeEntities: false});
 }
 
 module.exports = {

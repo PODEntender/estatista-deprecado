@@ -34,7 +34,7 @@ const fetchUrl = url => http.get(url, {
 
 const sanitizeContent = content => transformer.transformInternalLinks(content)
 
-const extractAssetUrls = html => {
+const extractAssetUrlsFromHtml = html => {
   const urls = []
   const $ = cheerio.load(html)
 
@@ -47,9 +47,14 @@ const extractAssetUrls = html => {
   $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.content))
+  $('[style*=url]')
+    .toArray()
+    .forEach(elm => urls.push(extractAssetUrlsFromCss(elm.attribs.style)[0]))
 
   return urls
 }
+
+const extractAssetUrlsFromCss = css => css.match(/https?:\/\/[\D+\/\d]+\.[a-zA-Z]+/).concat([])
 
 module.exports = async function fetchAndSaveOnlinePages(urls) {
   const url = urls.pop().replace('http://', 'https://')
@@ -59,7 +64,7 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
     const file = generateDestinationFile(url)
     const dir = generateDestinationDir(file)
 
-    if (true === JSON.parse(process.env.OVERWRITE_FILES) || false === fs.existsSync(file)) {
+    if (true === JSON.parse(OVERWRITE_FILES) || false === fs.existsSync(file)) {
       console.log(`Writing page ${url}...`)
 
       try {
@@ -82,7 +87,7 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
           )
           .then(content => {
             if (true === isHtml(file)) {
-              extractAssetUrls(content.toString()).forEach(url => urls.push(url))
+              extractAssetUrlsFromHtml(content.toString()).forEach(url => urls.push(url))
 
               return fs.writeFileSync(file, sanitizeContent(content))
             }
@@ -92,7 +97,7 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
       } catch (e) {
         console.log(`Failed to save file ${file}. Skipping...`)
       }
-    } else {
+    } else if (0 < urls.length) {
       return fetchAndSaveOnlinePages(urls)
     }
 
