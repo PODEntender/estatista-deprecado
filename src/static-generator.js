@@ -17,6 +17,7 @@ const {
 } = process.env
 
 const isHtml = url => parse(url).ext === '.html'
+const isCss = url => parse(url).ext === '.css'
 
 const generateDestinationFile = url => {
   const { dir, base, ext } = parse(url);
@@ -49,12 +50,14 @@ const extractAssetUrlsFromHtml = html => {
     .forEach(elm => urls.push(elm.attribs.content))
   $('[style*=url]')
     .toArray()
-    .forEach(elm => urls.push(extractAssetUrlsFromCss(elm.attribs.style)[0]))
+    .forEach(elm => extractAssetsFromInlineCss(elm.attribs.style))
 
   return urls
 }
 
-const extractAssetUrlsFromCss = css => css.match(/https?:\/\/[\D+\/\d]+\.[a-zA-Z]+/).concat([])
+const extractAssetsFromInlineCss = style => style.replace(/.+url|[\(\)';]/g, '')
+
+const extractAssetUrlsFromCss = css => css.match(/url\('[\.\?\w\d\/=\-#&]+'\)/g).map(url => url.replace(/url|[\(\)';]/g, ''))
 
 module.exports = async function fetchAndSaveOnlinePages(urls) {
   const url = urls.pop().replace('http://', 'https://')
@@ -90,6 +93,12 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
               extractAssetUrlsFromHtml(content.toString()).forEach(url => urls.push(url))
 
               return fs.writeFileSync(file, sanitizeContent(content))
+            }
+
+            if (true === isCss(file)) {
+              extractAssetUrlsFromCss(content.toString()).forEach(url => urls.push(join(parse(file).dir, url)))
+
+              return fs.writeFileSync(file, content)
             }
 
             return fs.writeFileSync(file, content)
