@@ -27,7 +27,7 @@ const generateDestinationFile = url => {
 
 const generateDestinationDir = file => dirname(file)
 
-const fetchUrl = url => http.get(url, {
+const fetchUrl = url => http.get(encodeURI(url), {
   transformResponse: [],
   responseType: 'stream',
 })
