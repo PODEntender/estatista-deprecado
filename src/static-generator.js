@@ -42,7 +42,7 @@ const extractAssetUrlsFromHtml = html => {
   $('img[src],script[src*="//podentender.com"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.src))
-  $('link[href*="//podentender.com"][href*=".css"],link[rel*="icon"]')
+  $('link[href*="//podentender.com"][href*=".css"],link[rel*="icon"],a[href^="https://podentender.com"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.href))
   $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
