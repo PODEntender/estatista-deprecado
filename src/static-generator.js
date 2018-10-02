@@ -96,7 +96,8 @@ module.exports = async function fetchAndSaveOnlinePages(urls) {
             }
 
             if (true === isCss(file)) {
-              extractAssetUrlsFromCss(content.toString()).forEach(url => urls.push(join(parse(file).dir, url)))
+              const fixFileName = url => join(parse(file).dir, url).replace(/\?.+/, '')
+              extractAssetUrlsFromCss(content.toString()).forEach(url => urls.push(fixFileName(url)))
 
               return fs.writeFileSync(file, content)
             }
