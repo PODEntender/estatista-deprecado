@@ -39,13 +39,13 @@ const extractAssetUrlsFromHtml = html => {
   const urls = []
   const $ = cheerio.load(html)
 
-  $('img[src],script[src*="//podentender.com"]')
+  $('img[src],script[src*="//internal.podentender.com"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.src))
-  $('link[href*="//podentender.com"][href*=".css"],link[rel*="icon"],a[href^="https://podentender.com"]')
+  $('link[href*="//internal.podentender.com"][href*=".css"],link[rel*="icon"],a[href^="https://internal.podentender.com"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.href))
-  $('meta[property*="og:image"][content*="//podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
+  $('meta[property*="og:image"][content*="//internal.podentender.com"],meta[name="twitter:image"],meta[name*="TileImage"]')
     .toArray()
     .forEach(elm => urls.push(elm.attribs.content))
   $('[style*=url]')
