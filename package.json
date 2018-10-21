@@ -1,0 +1,24 @@
+{
+  "name": "estatista",
+  "version": "1.0.0",
+  "description": "[![Build Status](https://travis-ci.org/PODEntender/estatista.svg?branch=master)](https://travis-ci.org/PODEntender/estatista)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PODEntender/estatista.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PODEntender/estatista/issues"
+  },
+  "homepage": "https://github.com/PODEntender/estatista#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "cheerio": "^1.0.0-rc.2",
+    "ramda": "^0.25.0"
+  }
+}
