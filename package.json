@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "download": "node src/website-downloader.js podentender.com https://internal.podentender.com ./dist",
+    "transform": "node src/website-transformer.js ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
