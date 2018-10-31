@@ -2,8 +2,10 @@ install:
   - npm install
 
 script:
-  - npm run build
-  - npm run clean
+  - npm run download
+  - npm run transform
+  - mv dist/* ./
+  - rm -rf node_modules/ package.* *.md dist/ src/
 
 deploy:
   provider: pages
