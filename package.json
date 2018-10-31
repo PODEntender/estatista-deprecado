@@ -4,6 +4,7 @@
   "description": "[![Build Status](https://travis-ci.org/PODEntender/estatista.svg?branch=master)](https://travis-ci.org/PODEntender/estatista)",
   "main": "index.js",
   "scripts": {
+    "download": "node src/website-downloader.js podentender.com https://internal.podentender.com ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

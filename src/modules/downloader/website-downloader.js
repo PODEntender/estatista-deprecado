@@ -24,7 +24,6 @@ const downloadWebsite = async (host, urls, destination) => {
   }
 
   const url = urls.pop();
-  console.log(url);
   try {
     const file = await download(url, destination);
 
@@ -42,3 +41,5 @@ const downloadWebsite = async (host, urls, destination) => {
     return downloadWebsite(host, uniq(urls), destination);
   }
 };
+
+module.exports = downloadWebsite;
