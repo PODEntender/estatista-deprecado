@@ -1,7 +1,10 @@
 'use strict';
 
 const transform = require('./transform');
+const { parse } = require('path');
 const { fetchFilePathsRecursively, readAsync, writeAsync } = require('../utils/file');
+
+const READABLE_EXTENSIONS = ['.html', '.css', '.js', '.xml'];
 
 const localTransformer = async (path, config) => {
   const files = await fetchFilePathsRecursively(path);
@@ -9,10 +12,16 @@ const localTransformer = async (path, config) => {
   const promises = files.map((filePath) => new Promise((resolve) => {
     readAsync(filePath)
       .then((content) => {
-        const newContent = transform(content, config);
+        const { ext } = parse(filePath);
+        const isBinary = READABLE_EXTENSIONS.indexOf(ext) === -1;
 
-        writeAsync(filePath, newContent)
-          .then(resolve);
+        if (isBinary) {
+          writeAsync(filePath, content)
+            .then(resolve);
+        } else {
+          writeAsync(filePath, transform(content, config))
+            .then(resolve);
+        }
       });
   }));
 
