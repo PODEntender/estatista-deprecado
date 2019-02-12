@@ -3,6 +3,7 @@
 * Widescreen Devices
 *
 **/
+.post_content_wrapper { font-size: 16px; }
 @media only screen and (min-width: 1100px) {
 	#menu_wrapper, #page_caption.hasbg .page_title_wrapper .page_title_inner, .ppb_fullscreen_image .main_content, #slidecaption.portfolio_slideshow #gallery_caption
 	{
@@ -909,7 +910,7 @@
 	#page_content_wrapper .inner .inner_wrapper { padding: 0; }
 	#page_content_wrapper .inner .sidebar_content.full_width, .gallery_mansory_wrapper { width: 100%; margin-top: 15px; margin-bottom: 0; }
 	#page_content_wrapper .inner .sidebar_content img { max-width: 100%; height: auto; }
-	#page_content_wrapper { width: 100%; margin-top: 0; padding: 0 30px 0 30px; box-sizing: border-box; }
+	#page_content_wrapper { width: 100%; margin-top: 0; padding: 0 10px; box-sizing: border-box; }
 	#page_content_wrapper.wide, .page_content_wrapper.wide { padding: 0; }
 	#page_content_wrapper .inner { width: 100%; padding: 0; }
 	#page_content_wrapper .inner #page_main_content { margin-top: 0; padding-bottom: 0; }
